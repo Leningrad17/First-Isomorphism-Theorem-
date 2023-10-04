@@ -1,1 +1,1 @@
-This repo consists of files pertaining to my project on the First Isomorphism Theorem in Alloy, a finite modeling program. 
+This repo consists of files pertaining to my project on the First Isomorphism Theorem in Alloy, a finite modeling program. Each issue will represent a distinct step of progress in defining my model. 
