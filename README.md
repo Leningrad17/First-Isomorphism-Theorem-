@@ -1,0 +1,1 @@
+This repo consists of files pertaining to my project on the First Isomorphism Theorem in Alloy, a finite modeling program. 
