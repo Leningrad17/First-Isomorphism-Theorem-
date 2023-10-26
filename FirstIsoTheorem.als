@@ -1,51 +1,63 @@
 
 //Signatures used to represent a Group
-sig Elements{
-	Epairs : set Elements,
-	Ebinop: Epairs -> set Elements}
-
+sig Elements{}
 sig Group {
-	elements: set Elements,
-	pairs : elements -> elements,
-	binop : pairs -> elements
+	element : set Elements,
+	mult : element -> element -> one element,
+	id : one element,
+	inv : element -> one element
 	}
 
-//A map between our two signatures which allows for easier access to information on the internals
-pred ElementsandGroupsCorrelate(g : Group) {
-	all g : Group | Elements = g.elements and (all e1, e2: Elements | (e2 in e1.Epairs) iff (e1 -> e2 in g.pairs)) and (all e1, e2, e3: Elements | (e2 -> e3 in e1.Ebinop) iff (e1->e2->e3 in g.binop)) }
+	
 
-//Makes sure each group has at least one element and that all of the Elements displayed are in the group
+
+//Makes sure that all of the elements displayed are in the group
 pred GroupHasAtLeastOneElm(g: Group) {
-	all g: Group | #g.elements > 0
-	all e : Elements | e in g.elements }
+	all g: Group | g.element = Elements }
 
-//Makes sure that all possible pairings between elements exist (we want this since our binary operation must work on any two elements in our group
-pred AllPossiblePairsExist(g : Group) {
-	all g: Group | (g.elements->g.elements) = g.pairs}
 
-//Enforces that our binary operation is well-defined by checking that every pair of points only maps to a singular element
-pred EveryPairMapsToOneValueInElm(e : Elements) {
-	all e: Elements | all e1 : Elements | e1 in e.Epairs implies (one e2 : Elements | e1 -> e2 in e.Ebinop)}
+//Enforces the property that whenever you apply the binary operation to the identity element and any other element (which
+//can include the identity as well), you return the other element (i.e., given a binary operation "x" and an arbitrary element e,
+// e x id = e and id x e = e)
+pred IdentityBinOpProperty(g : Group) {
+	all g: Group | all e1 : g.element | (e1 -> e1 in g.mult[g.id]) and (g.id -> e1 in g.mult[e1]) }
 
-//Enforces that every group has a unique identity element, whose property is that whenever you apply the binary operation to it and any other
-//element x, you return x.
-pred EveryGroupHasIdentity(g : Group) {
-	all g: Group | one i : Elements | all e1: Elements | (e1 -> e1 in i.Ebinop and i -> e1 in e1.Ebinop)}
+//Enforces the property that the identity element of a group will be its own inverse
+pred IdentityIsOwnInverse(g : Group) {
+	all g: Group | g.inv[g.id] = g.id }
+
+//Enforces the property that every element of a group will have a unique inverse
+pred EachElementHasUniqueInverse(g: Group) {
+	all g: Group | all disj e1, e2: g.element | (g.inv[e1] not in g.inv[e2]) and (g.inv[e2] not in g.inv[e1])}
+
+//Enforces the property that whenever you apply the binary operation to an element and its inverse (or vice versa), then you
+//return the identity element of the group
+pred InverseBinOpProperty(g : Group) {
+	all g: Group | all e1 : g.element | g.mult[e1,g.inv[e1]] in g.id and g.mult[g.inv[e1],e1] in g.id}
+
+//Enforces the property that whenever you apply the binary operation to three elements (not necessarily distinct), then 
+//associativity holds (i.e. given a binary operation "x" and three arbitrary elements e1, e2, e3, then (e1 x e2) x e3 = e1 x (e2 x e3) )
+pred AssociativityBinOpProperty(g: Group) {
+	all g: Group | all e1, e2, e3: g.element | (g.mult[g.mult[e1,e2],e3] in g.mult[e1,g.mult[e2,e3]]) and (g.mult[e1,g.mult[e2,e3]] in g.mult[g.mult[e1,e2],e3]) }
+
+
+
 
 	
 	
-
+//This predicate will create groups as defined in the axioms for groups (i.e. makes sure that in all instances, the Group atoms
+// are indeed groups)
 pred GroupDefinition(g: Group) {
 	all g: Group | GroupHasAtLeastOneElm[g]
-	all g: Group | AllPossiblePairsExist[g]
-	all g: Group | ElementsandGroupsCorrelate[g]
-	all e : Elements | EveryPairMapsToOneValueInElm[e]
-	all g: Group | EveryGroupHasIdentity[g]
+	all g: Group | IdentityBinOpProperty[g]
+	all g: Group | IdentityIsOwnInverse[g]
+	all g: Group | EachElementHasUniqueInverse[g]
+	all g: Group | InverseBinOpProperty[g]
+	all g: Group | AssociativityBinOpProperty[g]
 	}
 
 
+run GroupDefinition for exactly 1 Group, exactly 5 Elements
 
 
 
-run GroupHasAtLeastOneElm for 3 Elements, exactly 1 Group
-run GroupDefinition for 3 Elements, exactly 1 Group
