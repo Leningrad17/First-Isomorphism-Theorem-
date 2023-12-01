@@ -1,4 +1,4 @@
-
+open util/integer
 //Signatures used to represent a Group
 sig Elements{}
 sig Group {
@@ -11,6 +11,7 @@ sig Hom {
 	dom : one Group,
 	ran : one Group,
 	map :set Elements -> set Elements }
+
 
 
 	
@@ -67,7 +68,7 @@ assert EachElementHasUniqueInverse{
 	all g: Group | all disj e1, e2: g.element | (g.inv[e1] not in g.inv[e2]) and (g.inv[e2] not in g.inv[e1])}
 
 //fun Subgroups(g : Group) : Group {
-//	{g2: Group | g2.element in g.element and g2.mult in g.mult and g2.id = g.id and g2.inv in g.inv} }
+	//{g2: Group | g2.element in g.element and g2.mult in g.mult and g2.id = g.id and g2.inv in g.inv} }
 
 //pred IsASubgroupOf{
 //	all g : Group | some g2 : Group-g| g2 in Subgroups[g] and g.mult not in g2.mult}
@@ -96,12 +97,35 @@ assert HomsMapIdentityToIdentity {
 assert HomMapofInverseEqualsInverseofHomMap {
 	all h: Hom | all g: h.dom.element | h.map[h.dom.inv[g]] = h.ran.inv[h.map[g]] }
 
-//fun KernelGroups [h: Hom] : Group {
-//	{ g: h.dom.element | h.map[g] = h.ran.id } }
+fun KernelGroups [h: Hom] : Elements {
+	{ g: h.dom.element | h.map[g] = h.ran.id } }
+
+fun TestGroup [h : Hom] : Group {
+	{g : Group | } }
+
+//pred SubgroupsofZ4 [g : Group] {
+//	some disj e1, e2, e3, e4 : Elements | g.element = e1 + e2 + e3 + e4 and g.id = e1 and g.inv = (e1 -> e1) + (e2 -> e4) + (e3 -> e3) + (e4 -> e2) and g.mult = (e1 -> e1 -> e1) + (e1 -> e2 -> e2) + (e1 -> e3 -> e3) + (e1 -> e4 -> e4) + (e2 -> e1 -> e2) + (e2 -> e2 -> e3) + (e2 -> e3 -> e4) + (e2 -> e4 -> e1) + (e3 -> e1 -> e3) + (e3 -> e2 -> e4) + (e3 -> e3 -> e1) + (e3 -> e4 -> e2) + (e4 -> e1 -> e4) + (e4 -> e2 -> e1) + (e4 -> e3 -> e2) + (e4 -> e4 -> e3)
+//	all g1 : Group-g | g1.element in g.element and rem[#(g.element),#(g1.element)] = 0 and g1.id = g.id}
+
+
+
+ //Calculates the order of an element in a group
+fun ElementOrder [g: Group, e: g.element] : Int {
+		#(g.id.*(e.(g.mult))) }
+
+//Asserts that for all elements of a group, the order of the elements will always divide the order of the group (i.e Lagrange's Theorem)
+assert OrderofElementDividesGroupOrder {
+	all g: Group | all e : g.element | rem[#(g.element),ElementOrder[g, e]] = 0 }
+
+
+
+
+
+
 
 	
 
-pred Main{}
+//pred Main{}
 
 	
 
@@ -115,14 +139,17 @@ pred CyclicGroupSize6 {
 
 
 run HomsAreFunctions for exactly 2 Group, exactly 1 Hom, exactly 4 Elements
-//run Subgroups for exactly 2 Group, exactly 4 Elements
+//run SubgroupsofZ4 for exactly 2 Group, 0 Hom, exactly 4 Elements
 //run IsASubgroupOf for exactly 2 Group, exactly 1 Hom, exactly 5 Elements
-run Main for exactly 2 Group, exactly 1 Hom,  exactly 4 Elements
+//run Main for exactly 2 Group, exactly 1 Hom,  exactly 4 Elements
 check IdentityIsOwnInverse for exactly 1 Group, 5 Elements
 check EachElementHasUniqueInverse for exactly 1 Group, 5 Elements
 check HomsMapIdentityToIdentity for exactly 2 Group, 1 Hom, exactly 5 Elements 
 check HomMapofInverseEqualsInverseofHomMap for exactly 2 Group, 1 Hom, exactly 5 Elements
 run CyclicGroupSize6 for exactly 1 Group, exactly 0 Hom, 7 Elements
+check OrderofElementDividesGroupOrder for exactly 1 Group, exactly 0 Hom, 7 Elements
+
+
 
 
 
