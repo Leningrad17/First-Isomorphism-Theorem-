@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view>
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="G"/>
+   <type name="H"/>
+   <type name="Int"/>
+   <type name="String"/>
+   <type name="G/Group"/>
+   <type name="H/Group"/>
+   <type name="seq/Int"/>
+</node>
+
+<node shape="Circle" color="Gray">
+   <type name="univ"/>
+</node>
+
+<node showlabel="no" shape="Dbl Circle">
+   <set name="$showIdentities_g" type="G"/>
+   <set name="$showIdentities_h" type="H"/>
+</node>
+
+</view>
+
+</alloy>

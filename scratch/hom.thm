@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view>
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="String"/>
+   <type name="seq/Int"/>
+</node>
+
+<node color="Blue">
+   <type name="G"/>
+</node>
+
+<node color="Gray" label="K">
+   <set name="$showKernel_K" type="G"/>
+</node>
+
+<node color="Red">
+   <type name="H"/>
+</node>
+
+<node label="e">
+   <type name="G_e"/>
+   <type name="H_e"/>
+</node>
+
+<node shape="Circle">
+   <type name="univ"/>
+</node>
+
+<edge label="i">
+   <relation name="G_i"> <type name="G"/> <type name="G"/> </relation>
+   <relation name="H_i"> <type name="H"/> <type name="H"/> </relation>
+</edge>
+
+<edge label="m">
+   <relation name="G_m"> <type name="G"/> <type name="G"/> <type name="G"/> </relation>
+   <relation name="H_m"> <type name="H"/> <type name="H"/> <type name="H"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
